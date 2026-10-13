@@ -1,0 +1,10 @@
+{
+  "name": "NhxModFixes",
+  "version_number": "1.2.0",
+  "website_url": "",
+  "description": "Private mod: fixes and tweaks for other mods on our server. Not published on Thunderstore.",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2202",
+    "ValheimModding-Jotunn-2.30.2"
+  ]
+}
