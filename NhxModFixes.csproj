@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Fixes\ChestUseKey.cs" />
     <Compile Include="Fixes\DepositSupport.cs" />
+    <Compile Include="Fixes\FollowDistance.cs" />
     <Compile Include="Fixes\IgnoreTames.cs" />
     <Compile Include="Fixes\PassThroughFriends.cs" />
     <Compile Include="Fixes\RtdSpawnLimit.cs" />

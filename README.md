@@ -30,6 +30,10 @@ Opening a chest with the interact key while still holding it could open the sock
 
 A tame following you can get between you and what you aim at: a flying one hovering over your head takes the interact key, and you pet it instead of opening the door or chest behind it. Press End to aim through tames: the interact key, the hover text and items used from the hotbar go to what's behind them. Press it again to pet, command, ride or protect your tames. It's for you only, and it's off each time the game starts.
 
+## Tames keeping their distance
+
+A tame following you walks right up to you and stops against you, and a flying one, like RtD's fairies, hovers over your head. With NhxModFixes, a following tame stays 3 m away when it isn't fighting, and a flying one stays beside you. If you walk up to it, it steps back, where there's room and only while you keep walking toward it: stop, and it stops too, close enough to pet it or tell it to stay.
+
 ## Ore deposits
 
 Copper deposits, silver veins and big rocks are made of chunks, and when one breaks, the game drops every chunk that nothing holds up any more. It decides that with a box around each chunk, lined up with the world and often several times bigger than the chunk, so a deposit you've dug free can still count as touching the ground and stay hanging in the air. NhxModFixes turns each box to fit its chunk more closely. It helps most with long, diagonal chunks. A box still reaches past the rock in places, so a deposit can still hang now and then. It's always on.
@@ -45,6 +49,8 @@ Copper deposits, silver veins and big rocks are made of chunks, and when one bre
 | Collisions | Pass through players | true | Players walk through each other. |
 | Teleports | Fix players left in portals | true | The fix for players left in portals. Only the server uses it. |
 | Containers | Fix sockets opening at chests | true | The fix for sockets opening at chests. |
+| Tames | Follow distance | 3 | How far, in meters, a following tame stays from its player, body to body. 0 for the game's behavior. |
+| Tames | Step back when approached | true | A following tame steps back when its player walks up to it. |
 | Tames | Ignore tames key | End | The key to aim through tames, or to stop. |
 
 The server's settings apply to every player, and only admins can change them, in game with the Configuration Manager (F1). A change to the server's config file applies after a restart. The exception is "Ignore tames key": each player sets their own.

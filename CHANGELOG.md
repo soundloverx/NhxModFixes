@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.3.0
+- Tames following a player keep a gap of 3 m from them when they aren't fighting, instead of walking right up to them, and flying ones (RtD's fairies) stay beside the player instead of hovering over their head. Setting "Follow distance", 0 for the game's behavior
+- A following tame that a player walks up to steps back where there's room, and stops as soon as the player stops walking toward it, so walking up to it to pet or command it still works. Setting "Step back when approached", on by default
+
 ## v1.2.1
 - Ore deposits made of chunks (copper, silver, big rocks) check what holds each chunk up with a box fitted to that chunk, instead of the game's box lined up with the world, which is often several times bigger. A deposit dug free hangs in the air less often, mostly with long, diagonal chunks. Always on, no setting
 

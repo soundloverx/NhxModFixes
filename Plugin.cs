@@ -14,16 +14,17 @@ namespace NhxModFixes
     [BepInDependency("org.bepinex.plugins.jewelcrafting", BepInDependency.DependencyFlags.SoftDependency)]
     // Each player's game spawns the monsters around them and moves its own player, so everyone needs the RtD limit and
     // the collisions, with the server's settings. A prefab is only found again by the games that have the fix, a
-    // shared boss kill is sent from one player's game to the others', and an ore deposit collapses (or not) as the game
-    // controlling it decides
+    // shared boss kill is sent from one player's game to the others', and an ore deposit collapses (or not) and a tame
+    // keeps its distance as the game controlling it decides
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     public class Plugin : BaseUnityPlugin
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.2.1";
+        private const string PluginVersion = "1.3.0";
 
         private const int DefaultMaxRtdMonsters = 3;
+        private const float DefaultFollowDistance = 3f;
         private static readonly KeyboardShortcut DefaultIgnoreTamesKey = new KeyboardShortcut(KeyCode.End);
 
         internal static Plugin Instance { get; private set; }
@@ -34,6 +35,8 @@ namespace NhxModFixes
         private ConfigEntry<bool> _passThroughPlayers;
         private ConfigEntry<bool> _fixTeleportGhosts;
         private ConfigEntry<bool> _fixChestSockets;
+        private ConfigEntry<float> _followDistance;
+        private ConfigEntry<bool> _stepBackFromPlayers;
         private ConfigEntry<KeyboardShortcut> _ignoreTamesKey;
         private Harmony _harmonyInstance;
 
@@ -42,6 +45,8 @@ namespace NhxModFixes
         internal static bool PassThroughPlayers => Instance?._passThroughPlayers == null || Instance._passThroughPlayers.Value;
         internal static bool FixTeleportGhosts => Instance?._fixTeleportGhosts == null || Instance._fixTeleportGhosts.Value;
         internal static bool FixChestSockets => Instance?._fixChestSockets == null || Instance._fixChestSockets.Value;
+        internal static float FollowDistance => Instance?._followDistance != null ? Instance._followDistance.Value : DefaultFollowDistance;
+        internal static bool StepBackFromPlayers => Instance?._stepBackFromPlayers == null || Instance._stepBackFromPlayers.Value;
         internal static KeyboardShortcut IgnoreTamesKey => Instance?._ignoreTamesKey != null ? Instance._ignoreTamesKey.Value : DefaultIgnoreTamesKey;
 
         private void Awake()
@@ -109,6 +114,33 @@ namespace NhxModFixes
                     "(Jewelcrafting, with AzuEPI's equipment slots there), and leave the mouse stuck until the inventory was closed. " +
                     "With this, the key press that opens a chest doesn't open sockets, and the mouse is freed if the chest closes " +
                     "while the key is held. The server's setting applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _followDistance = Config.Bind(
+                "Tames",
+                "Follow distance",
+                DefaultFollowDistance,
+                new ConfigDescription(
+                    "How far, in meters, a tame following a player stays from them when it isn't fighting, from its body to " +
+                    "theirs. The game stops them 3 m away center to center, so big ones stand against the player, and flying ones " +
+                    "(RtD's fairies) hover right over the player's head; with this, flying ones stay beside the player. " +
+                    "0 keeps the game's behavior. The server's setting applies to every player.",
+                    new AcceptableValueRange<float>(0f, 6f),
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+            _stepBackFromPlayers = Config.Bind(
+                "Tames",
+                "Step back when approached",
+                true,
+                new ConfigDescription(
+                    "A following tame that a player walks up to, closer than half the follow distance, steps back where there's " +
+                    "room: along a short path for walking ones, through open air for flying ones. It stops as soon as the player " +
+                    "stops walking toward it, so walking up to a tame to pet or command it still works. The server's setting " +
+                    "applies to every player.",
                     null,
                     new ConfigurationManagerAttributes { IsAdminOnly = true }
                 )
