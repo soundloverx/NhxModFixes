@@ -13,14 +13,15 @@ namespace NhxModFixes
     // Loaded first when installed, so that its classes can be found to patch
     [BepInDependency("org.bepinex.plugins.jewelcrafting", BepInDependency.DependencyFlags.SoftDependency)]
     // Each player's game spawns the monsters around them and moves its own player, so everyone needs the RtD limit and
-    // the collisions, with the server's settings. A prefab is only found again by the games that have the fix, and a
-    // shared boss kill is sent from one player's game to the others'
+    // the collisions, with the server's settings. A prefab is only found again by the games that have the fix, a
+    // shared boss kill is sent from one player's game to the others', and an ore deposit collapses (or not) as the game
+    // controlling it decides
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     public class Plugin : BaseUnityPlugin
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.2.0";
+        private const string PluginVersion = "1.2.1";
 
         private const int DefaultMaxRtdMonsters = 3;
         private static readonly KeyboardShortcut DefaultIgnoreTamesKey = new KeyboardShortcut(KeyCode.End);

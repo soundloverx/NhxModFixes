@@ -30,6 +30,10 @@ Opening a chest with the interact key while still holding it could open the sock
 
 A tame following you can get between you and what you aim at: a flying one hovering over your head takes the interact key, and you pet it instead of opening the door or chest behind it. Press End to aim through tames: the interact key, the hover text and items used from the hotbar go to what's behind them. Press it again to pet, command, ride or protect your tames. It's for you only, and it's off each time the game starts.
 
+## Ore deposits
+
+Copper deposits, silver veins and big rocks are made of chunks, and when one breaks, the game drops every chunk that nothing holds up any more. It decides that with a box around each chunk, lined up with the world and often several times bigger than the chunk, so a deposit you've dug free can still count as touching the ground and stay hanging in the air. NhxModFixes turns each box to fit its chunk more closely. It helps most with long, diagonal chunks. A box still reaches past the rock in places, so a deposit can still hang now and then. It's always on.
+
 ## Settings
 
 `NhxModFixes.cfg`:

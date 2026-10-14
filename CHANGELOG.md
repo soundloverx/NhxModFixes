@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.2.1
+- Ore deposits made of chunks (copper, silver, big rocks) check what holds each chunk up with a box fitted to that chunk, instead of the game's box lined up with the world, which is often several times bigger. A deposit dug free hangs in the air less often, mostly with long, diagonal chunks. Always on, no setting
+
 ## v1.2.0
 - A key to aim through tamed creatures, so a pet hovering over your head no longer takes the interact key meant for the door or chest behind it. Press it again to interact with tames. Setting "Ignore tames key", End by default, each player's own
 - Tamed RtD creatures no longer count toward the shared RtD spawn limit, so a pet following you doesn't hold back the monsters around you
