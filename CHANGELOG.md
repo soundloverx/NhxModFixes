@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.2
+- Every sealed fusion box you carry (Jewelcrafting) fuses at its own rate. Jewelcrafting gave each minute's progress, and a boss's reward, to one of them at random, so with three boxes each one took three times as long. Setting "Fuse all carried boxes", on by default
+- Fusion boxes progress every minute, even while you stand still (at a crafting station, by a fire), instead of only after you've moved. Setting "Fuse while standing still", on by default
+
+## v1.3.1
+- Resting by a fire makes you rested after 5 seconds instead of 20. Setting "Time to get rested", 20 for the game's timing
+
 ## v1.3.0
 - Tames following a player keep a gap of 3 m from them when they aren't fighting, instead of walking right up to them, and flying ones (RtD's fairies) stay beside the player instead of hovering over their head. Setting "Follow distance", 0 for the game's behavior
 - A following tame that a player walks up to steps back where there's room, and stops as soon as the player stops walking toward it, so walking up to it to pet or command it still works. Setting "Step back when approached", on by default

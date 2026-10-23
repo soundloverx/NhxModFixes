@@ -14,17 +14,19 @@ namespace NhxModFixes
     [BepInDependency("org.bepinex.plugins.jewelcrafting", BepInDependency.DependencyFlags.SoftDependency)]
     // Each player's game spawns the monsters around them and moves its own player, so everyone needs the RtD limit and
     // the collisions, with the server's settings. A prefab is only found again by the games that have the fix, a
-    // shared boss kill is sent from one player's game to the others', and an ore deposit collapses (or not) and a tame
-    // keeps its distance as the game controlling it decides
+    // shared boss kill is sent from one player's game to the others', an ore deposit collapses (or not) and a tame keeps
+    // its distance as the game controlling it decides, and each player's game decides when they're rested and how fast
+    // the fusion boxes they carry fuse
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     public class Plugin : BaseUnityPlugin
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.3.0";
+        private const string PluginVersion = "1.3.2";
 
         private const int DefaultMaxRtdMonsters = 3;
         private const float DefaultFollowDistance = 3f;
+        private const int DefaultRestedDelay = 5;
         private static readonly KeyboardShortcut DefaultIgnoreTamesKey = new KeyboardShortcut(KeyCode.End);
 
         internal static Plugin Instance { get; private set; }
@@ -37,6 +39,9 @@ namespace NhxModFixes
         private ConfigEntry<bool> _fixChestSockets;
         private ConfigEntry<float> _followDistance;
         private ConfigEntry<bool> _stepBackFromPlayers;
+        private ConfigEntry<int> _restedDelay;
+        private ConfigEntry<bool> _fuseAllBoxes;
+        private ConfigEntry<bool> _fuseWhileStill;
         private ConfigEntry<KeyboardShortcut> _ignoreTamesKey;
         private Harmony _harmonyInstance;
 
@@ -47,6 +52,9 @@ namespace NhxModFixes
         internal static bool FixChestSockets => Instance?._fixChestSockets == null || Instance._fixChestSockets.Value;
         internal static float FollowDistance => Instance?._followDistance != null ? Instance._followDistance.Value : DefaultFollowDistance;
         internal static bool StepBackFromPlayers => Instance?._stepBackFromPlayers == null || Instance._stepBackFromPlayers.Value;
+        internal static int RestedDelay => Instance?._restedDelay != null ? Instance._restedDelay.Value : DefaultRestedDelay;
+        internal static bool FuseAllBoxes => Instance?._fuseAllBoxes == null || Instance._fuseAllBoxes.Value;
+        internal static bool FuseWhileStill => Instance?._fuseWhileStill == null || Instance._fuseWhileStill.Value;
         internal static KeyboardShortcut IgnoreTamesKey => Instance?._ignoreTamesKey != null ? Instance._ignoreTamesKey.Value : DefaultIgnoreTamesKey;
 
         private void Awake()
@@ -141,6 +149,44 @@ namespace NhxModFixes
                     "room: along a short path for walking ones, through open air for flying ones. It stops as soon as the player " +
                     "stops walking toward it, so walking up to a tame to pet or command it still works. The server's setting " +
                     "applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _restedDelay = Config.Bind(
+                "Rested",
+                "Time to get rested",
+                DefaultRestedDelay,
+                new ConfigDescription(
+                    "How many seconds of resting (near a fire, sitting or under a roof, not wet or cold) it takes to get the " +
+                    "Rested effect. The game's is 20. The server's setting applies to every player.",
+                    new AcceptableValueRange<int>(0, 60),
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _fuseAllBoxes = Config.Bind(
+                "Fusion boxes",
+                "Fuse all carried boxes",
+                true,
+                new ConfigDescription(
+                    "Jewelcrafting's sealed fusion boxes fuse while carried, by the rate shown on them for each minute the player " +
+                    "moves, and by a boss's reward when one dies nearby. Jewelcrafting gives that progress to one of the carried " +
+                    "boxes, picked at random, so with three boxes each one takes three times as long. With this, every carried box " +
+                    "gets its rate. The server's setting applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+            _fuseWhileStill = Config.Bind(
+                "Fusion boxes",
+                "Fuse while standing still",
+                true,
+                new ConfigDescription(
+                    "Jewelcrafting only counts a minute toward the fusion boxes' progress if the player has moved since the last " +
+                    "one that counted (0.5 m, or 30 m on a ship), so standing at a crafting station or sitting by a fire doesn't " +
+                    "count. With this, every minute counts. The server's setting applies to every player.",
                     null,
                     new ConfigurationManagerAttributes { IsAdminOnly = true }
                 )

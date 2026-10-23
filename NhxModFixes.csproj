@@ -84,8 +84,10 @@
     <Compile Include="Fixes\ChestUseKey.cs" />
     <Compile Include="Fixes\DepositSupport.cs" />
     <Compile Include="Fixes\FollowDistance.cs" />
+    <Compile Include="Fixes\FusionBoxProgress.cs" />
     <Compile Include="Fixes\IgnoreTames.cs" />
     <Compile Include="Fixes\PassThroughFriends.cs" />
+    <Compile Include="Fixes\RestedDelay.cs" />
     <Compile Include="Fixes\RtdSpawnLimit.cs" />
     <Compile Include="Fixes\SharedBossKills.cs" />
     <Compile Include="Fixes\TeleportGhosts.cs" />

@@ -38,6 +38,14 @@ A tame following you walks right up to you and stops against you, and a flying o
 
 Copper deposits, silver veins and big rocks are made of chunks, and when one breaks, the game drops every chunk that nothing holds up any more. It decides that with a box around each chunk, lined up with the world and often several times bigger than the chunk, so a deposit you've dug free can still count as touching the ground and stay hanging in the air. NhxModFixes turns each box to fit its chunk more closely. It helps most with long, diagonal chunks. A box still reaches past the rock in places, so a deposit can still hang now and then. It's always on.
 
+## Getting rested
+
+Resting by a fire, sitting or under a roof, makes you rested after 20 seconds in the game. With NhxModFixes it takes 5 seconds. How long the rested effect lasts doesn't change: it still depends on your comfort level.
+
+## Fusion boxes
+
+Jewelcrafting's sealed fusion boxes fuse while you carry them, at the rate shown on them for each minute, but only the minutes you've moved count, and each minute's progress goes to one of your boxes, picked at random: carry three, and each one takes three times as long. With NhxModFixes, every box you carry gets its rate every minute, whether you move or not, and a boss's fusion reward goes to every box too.
+
 ## Settings
 
 `NhxModFixes.cfg`:
@@ -52,6 +60,9 @@ Copper deposits, silver veins and big rocks are made of chunks, and when one bre
 | Tames | Follow distance | 3 | How far, in meters, a following tame stays from its player, body to body. 0 for the game's behavior. |
 | Tames | Step back when approached | true | A following tame steps back when its player walks up to it. |
 | Tames | Ignore tames key | End | The key to aim through tames, or to stop. |
+| Rested | Time to get rested | 5 | How many seconds of resting it takes to get rested. 20 for the game's timing. |
+| Fusion boxes | Fuse all carried boxes | true | Every carried fusion box gets its progress, instead of one at random. |
+| Fusion boxes | Fuse while standing still | true | Fusion boxes progress every minute, even when the player doesn't move. |
 
 The server's settings apply to every player, and only admins can change them, in game with the Configuration Manager (F1). A change to the server's config file applies after a restart. The exception is "Ignore tames key": each player sets their own.
 
