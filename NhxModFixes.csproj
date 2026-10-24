@@ -90,6 +90,7 @@
     <Compile Include="Fixes\RestedDelay.cs" />
     <Compile Include="Fixes\RtdSpawnLimit.cs" />
     <Compile Include="Fixes\SharedBossKills.cs" />
+    <Compile Include="Fixes\ShipImpacts.cs" />
     <Compile Include="Fixes\TeleportGhosts.cs" />
     <Compile Include="Fixes\UnregisteredPrefabs.cs" />
     <Compile Include="Plugin.cs" />

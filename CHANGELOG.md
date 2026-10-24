@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.3.3
+- A sailing ship that runs into a tamed creature no longer damages it or itself, as the game already does for players. Tames around a sailing player (RtD's fairies, or tames BetterTames teleports to them) damaged the ship as if it hit a rock. Setting "No damage from tames" (section "Ships"), on by default
+
 ## v1.3.2
 - Every sealed fusion box you carry (Jewelcrafting) fuses at its own rate. Jewelcrafting gave each minute's progress, and a boss's reward, to one of them at random, so with three boxes each one took three times as long. Setting "Fuse all carried boxes", on by default
 - Fusion boxes progress every minute, even while you stand still (at a crafting station, by a fire), instead of only after you've moved. Setting "Fuse while standing still", on by default

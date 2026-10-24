@@ -15,14 +15,14 @@ namespace NhxModFixes
     // Each player's game spawns the monsters around them and moves its own player, so everyone needs the RtD limit and
     // the collisions, with the server's settings. A prefab is only found again by the games that have the fix, a
     // shared boss kill is sent from one player's game to the others', an ore deposit collapses (or not) and a tame keeps
-    // its distance as the game controlling it decides, and each player's game decides when they're rested and how fast
-    // the fusion boxes they carry fuse
+    // its distance and a ship spares it as the game controlling them decides, and each player's game decides when
+    // they're rested and how fast the fusion boxes they carry fuse
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     public class Plugin : BaseUnityPlugin
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.3.2";
+        private const string PluginVersion = "1.3.3";
 
         private const int DefaultMaxRtdMonsters = 3;
         private const float DefaultFollowDistance = 3f;
@@ -39,6 +39,7 @@ namespace NhxModFixes
         private ConfigEntry<bool> _fixChestSockets;
         private ConfigEntry<float> _followDistance;
         private ConfigEntry<bool> _stepBackFromPlayers;
+        private ConfigEntry<bool> _shipsIgnoreTames;
         private ConfigEntry<int> _restedDelay;
         private ConfigEntry<bool> _fuseAllBoxes;
         private ConfigEntry<bool> _fuseWhileStill;
@@ -52,6 +53,7 @@ namespace NhxModFixes
         internal static bool FixChestSockets => Instance?._fixChestSockets == null || Instance._fixChestSockets.Value;
         internal static float FollowDistance => Instance?._followDistance != null ? Instance._followDistance.Value : DefaultFollowDistance;
         internal static bool StepBackFromPlayers => Instance?._stepBackFromPlayers == null || Instance._stepBackFromPlayers.Value;
+        internal static bool ShipsIgnoreTames => Instance?._shipsIgnoreTames == null || Instance._shipsIgnoreTames.Value;
         internal static int RestedDelay => Instance?._restedDelay != null ? Instance._restedDelay.Value : DefaultRestedDelay;
         internal static bool FuseAllBoxes => Instance?._fuseAllBoxes == null || Instance._fuseAllBoxes.Value;
         internal static bool FuseWhileStill => Instance?._fuseWhileStill == null || Instance._fuseWhileStill.Value;
@@ -149,6 +151,20 @@ namespace NhxModFixes
                     "room: along a short path for walking ones, through open air for flying ones. It stops as soon as the player " +
                     "stops walking toward it, so walking up to a tame to pet or command it still works. The server's setting " +
                     "applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _shipsIgnoreTames = Config.Bind(
+                "Ships",
+                "No damage from tames",
+                true,
+                new ConfigDescription(
+                    "A sailing ship that runs into a creature damages both, as if it hit a rock, but the game leaves players out. " +
+                    "With this, tamed creatures are left out too, so tames around a sailing player (RtD's fairies, or tames " +
+                    "BetterTames teleports to them) no longer damage the ship or get hurt by it. The server's setting applies to " +
+                    "every player.",
                     null,
                     new ConfigurationManagerAttributes { IsAdminOnly = true }
                 )

@@ -46,6 +46,10 @@ Resting by a fire, sitting or under a roof, makes you rested after 20 seconds in
 
 Jewelcrafting's sealed fusion boxes fuse while you carry them, at the rate shown on them for each minute, but only the minutes you've moved count, and each minute's progress goes to one of your boxes, picked at random: carry three, and each one takes three times as long. With NhxModFixes, every box you carry gets its rate every minute, whether you move or not, and a boss's fusion reward goes to every box too.
 
+## Ships and tames
+
+A sailing ship that runs into a creature damages it and itself, as if it hit a rock, but the game leaves players out. Tames weren't: RtD's fairies flying around a sailing player, or tames BetterTames teleports to them, onto the deck or into the hull, damaged the ship. With NhxModFixes, ships leave tames out too: neither the ship nor the tame takes damage. Rocks, the shore and wild creatures still damage the ship.
+
 ## Settings
 
 `NhxModFixes.cfg`:
@@ -60,6 +64,7 @@ Jewelcrafting's sealed fusion boxes fuse while you carry them, at the rate shown
 | Tames | Follow distance | 3 | How far, in meters, a following tame stays from its player, body to body. 0 for the game's behavior. |
 | Tames | Step back when approached | true | A following tame steps back when its player walks up to it. |
 | Tames | Ignore tames key | End | The key to aim through tames, or to stop. |
+| Ships | No damage from tames | true | Ships take no damage from running into tamed creatures, and deal none to them. |
 | Rested | Time to get rested | 5 | How many seconds of resting it takes to get rested. 20 for the game's timing. |
 | Fusion boxes | Fuse all carried boxes | true | Every carried fusion box gets its progress, instead of one at random. |
 | Fusion boxes | Fuse while standing still | true | Fusion boxes progress every minute, even when the player doesn't move. |
