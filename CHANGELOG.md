@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.0
+- The build menu no longer gets slower the longer you play. Every time it showed its pieces (opening it, picking a category, searching), the game added each button to a list again and never took it out. Setting "Fix build menu slowdown" (section "Build menu"), on by default
+- AzuCraftyBoxes forgets chests that have unloaded. A chest that loaded and unloaded while you weren't crafting or building (logging in at a base and leaving through a portal, walking past a base) stayed on its list for the rest of the session, and every craft went through it. Setting "Forget unloaded chests" (section "Containers"), on by default
+- World updates are sent faster when a lot changes (sailing, fights). The game sends at most 10 KB per round trip to each player and to the server, so updates pile up, which is likely why picking up items took seconds after a long sail. Each connection's limit now fits its ping and Steam's send rate (21 KB at 40 ms, up to 64 KB). Setting "Fit send window to ping" (section "Network"), on by default
+- A session report in the log every 5 minutes: frame rate, memory, objects, the build menu's and AzuCraftyBoxes' lists, each connection's send window and backlog, and item pickups that waited for another player's game. Setting "Session report interval" (section "Diagnostics"), each game's own, 0 turns it off
+- RtDLegends' altars inside dungeons (the Fenrir King's and the Spider Queen's) keep summoning their boss after Creature Level & Loot Control rebuilds their dungeon to refill it. The rebuilt altar couldn't take over from the old one, so offering the tokens did nothing until the player who went in logged out and back in. Setting "Fix RtD altars" (section "Boss altars"), on by default
+
 ## v1.3.3
 - A sailing ship that runs into a tamed creature no longer damages it or itself, as the game already does for players. Tames around a sailing player (RtD's fairies, or tames BetterTames teleports to them) damaged the ship as if it hit a rock. Setting "No damage from tames" (section "Ships"), on by default
 

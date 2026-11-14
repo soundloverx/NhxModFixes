@@ -41,6 +41,10 @@
       <HintPath>..\..\bepinex_mod_libs\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="assembly_guiutils_publicized">
+      <HintPath>..\..\publicized_assemblies\1.0-release\assembly_guiutils_publicized.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="assembly_utils_publicized">
       <HintPath>..\..\publicized_assemblies\1.0-release\assembly_utils_publicized.dll</HintPath>
       <Private>False</Private>
@@ -51,6 +55,11 @@
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>..\..\bepinex_mod_libs\BepInEx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <!-- Steamworks.NET, for the send window's connection status -->
+    <Reference Include="com.rlabrecque.steamworks.net">
+      <HintPath>$(ValheimManaged)\com.rlabrecque.steamworks.net.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Jotunn">
@@ -81,14 +90,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Diagnostics\PickupWaits.cs" />
+    <Compile Include="Diagnostics\SessionReport.cs" />
+    <Compile Include="Fixes\BuildMenuSubscriptions.cs" />
     <Compile Include="Fixes\ChestUseKey.cs" />
+    <Compile Include="Fixes\CraftyBoxesChests.cs" />
     <Compile Include="Fixes\DepositSupport.cs" />
     <Compile Include="Fixes\FollowDistance.cs" />
     <Compile Include="Fixes\FusionBoxProgress.cs" />
     <Compile Include="Fixes\IgnoreTames.cs" />
     <Compile Include="Fixes\PassThroughFriends.cs" />
     <Compile Include="Fixes\RestedDelay.cs" />
+    <Compile Include="Fixes\RtdAltars.cs" />
     <Compile Include="Fixes\RtdSpawnLimit.cs" />
+    <Compile Include="Fixes\SendWindow.cs" />
     <Compile Include="Fixes\SharedBossKills.cs" />
     <Compile Include="Fixes\ShipImpacts.cs" />
     <Compile Include="Fixes\TeleportGhosts.cs" />

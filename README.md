@@ -50,6 +50,26 @@ Jewelcrafting's sealed fusion boxes fuse while you carry them, at the rate shown
 
 A sailing ship that runs into a creature damages it and itself, as if it hit a rock, but the game leaves players out. Tames weren't: RtD's fairies flying around a sailing player, or tames BetterTames teleports to them, onto the deck or into the hull, damaged the ship. With NhxModFixes, ships leave tames out too: neither the ship nor the tame takes damage. Rocks, the shore and wild creatures still damage the ship.
 
+## RtD boss altars
+
+RtDLegends' Fenrir King and Spider Queen altars stand inside their dungeons. Creature Level & Loot Control rebuilds a dungeon to refill it when someone goes in after its respawn time, and the rebuilt altar couldn't take over from the old one: offering the tokens did nothing on that player's game until they logged out and back in, or went far away and came back. With NhxModFixes, the rebuilt altar takes over, and summons the boss as usual.
+
+## Build menu slowdown
+
+Every time the build menu shows its pieces (opening it, picking a category, searching), the game adds each button to a list again and never takes it out, so the menu gets a little slower each time, for the rest of the session. With NhxModFixes, a button's old entry is taken out first.
+
+## AzuCraftyBoxes chests
+
+AzuCraftyBoxes keeps a list of the chests it can take materials from. A chest that loads and unloads while you're not crafting or building, like when you log in at your base and leave through a portal, stays on that list for the rest of the session, and every craft goes through it. With NhxModFixes, unloaded chests are taken off its list.
+
+## Sending world updates
+
+The game sends world updates in batches of at most 10 KB per round trip, counting what the other side hasn't confirmed yet: the server to each player, and each player's game to the server. When a lot changes, like while sailing into new areas or in a fight, updates pile up, players and creatures first, items last, which is likely why picking up items could take seconds after a long sail. With NhxModFixes, each connection's limit fits its ping and Steam's send rate: about 21 KB at 40 ms of ping, up to 64 KB.
+
+## Session report
+
+Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame rate, memory use, how many objects the game holds, the build menu's and AzuCraftyBoxes' lists, and each connection's ping, send window and backlog. It also logs item pickups that waited a second or more for another player's game. The server writes it too, in its own log.
+
 ## Settings
 
 `NhxModFixes.cfg`:
@@ -68,8 +88,13 @@ A sailing ship that runs into a creature damages it and itself, as if it hit a r
 | Rested | Time to get rested | 5 | How many seconds of resting it takes to get rested. 20 for the game's timing. |
 | Fusion boxes | Fuse all carried boxes | true | Every carried fusion box gets its progress, instead of one at random. |
 | Fusion boxes | Fuse while standing still | true | Fusion boxes progress every minute, even when the player doesn't move. |
+| Boss altars | Fix RtD altars | true | RtDLegends' dungeon altars (Fenrir King, Spider Queen) still summon their boss after their dungeon is rebuilt. |
+| Build menu | Fix build menu slowdown | true | The fix for the build menu getting slower. |
+| Containers | Forget unloaded chests | true | Unloaded chests are taken off AzuCraftyBoxes' list. |
+| Network | Fit send window to ping | true | Each connection's send limit fits its ping and Steam's send rate, instead of the game's 10 KB. |
+| Diagnostics | Session report interval | 5 | Every this many minutes in a world, a session report in the log. 0 turns it off. |
 
-The server's settings apply to every player, and only admins can change them, in game with the Configuration Manager (F1). A change to the server's config file applies after a restart. The exception is "Ignore tames key": each player sets their own.
+The server's settings apply to every player, and only admins can change them, in game with the Configuration Manager (F1). A change to the server's config file applies after a restart. The exceptions are "Ignore tames key" and "Session report interval": each game has its own, the server's included.
 
 ## Installation
 

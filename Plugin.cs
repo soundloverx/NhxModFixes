@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using Jotunn.Utils;
+using NhxModFixes.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 
@@ -10,23 +11,28 @@ namespace NhxModFixes
 {
     [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
     [BepInDependency(Jotunn.Main.ModGuid, BepInDependency.DependencyFlags.HardDependency)]
-    // Loaded first when installed, so that its classes can be found to patch
+    // Loaded first when installed, so that Jewelcrafting's and AzuCraftyBoxes' classes can be found to patch, and
+    // RtDLegends is known to be installed
     [BepInDependency("org.bepinex.plugins.jewelcrafting", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("soloredis.rtdlegends", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("Azumatt.AzuCraftyBoxes", BepInDependency.DependencyFlags.SoftDependency)]
     // Each player's game spawns the monsters around them and moves its own player, so everyone needs the RtD limit and
     // the collisions, with the server's settings. A prefab is only found again by the games that have the fix, a
     // shared boss kill is sent from one player's game to the others', an ore deposit collapses (or not) and a tame keeps
     // its distance and a ship spares it as the game controlling them decides, and each player's game decides when
-    // they're rested and how fast the fusion boxes they carry fuse
+    // they're rested, how fast the fusion boxes they carry fuse and whether the RtD altars in a dungeon it rebuilds still
+    // summon their boss
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     public class Plugin : BaseUnityPlugin
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.3.3";
+        private const string PluginVersion = "1.4.0";
 
         private const int DefaultMaxRtdMonsters = 3;
         private const float DefaultFollowDistance = 3f;
         private const int DefaultRestedDelay = 5;
+        private const int DefaultReportMinutes = 5;
         private static readonly KeyboardShortcut DefaultIgnoreTamesKey = new KeyboardShortcut(KeyCode.End);
 
         internal static Plugin Instance { get; private set; }
@@ -43,7 +49,12 @@ namespace NhxModFixes
         private ConfigEntry<int> _restedDelay;
         private ConfigEntry<bool> _fuseAllBoxes;
         private ConfigEntry<bool> _fuseWhileStill;
+        private ConfigEntry<bool> _fixRtdAltars;
+        private ConfigEntry<bool> _fixBuildMenu;
+        private ConfigEntry<bool> _forgetUnloadedChests;
+        private ConfigEntry<bool> _fitSendWindow;
         private ConfigEntry<KeyboardShortcut> _ignoreTamesKey;
+        private ConfigEntry<int> _reportMinutes;
         private Harmony _harmonyInstance;
 
         internal static int MaxRtdMonsters => Instance?._maxRtdMonsters != null ? Instance._maxRtdMonsters.Value : DefaultMaxRtdMonsters;
@@ -57,7 +68,12 @@ namespace NhxModFixes
         internal static int RestedDelay => Instance?._restedDelay != null ? Instance._restedDelay.Value : DefaultRestedDelay;
         internal static bool FuseAllBoxes => Instance?._fuseAllBoxes == null || Instance._fuseAllBoxes.Value;
         internal static bool FuseWhileStill => Instance?._fuseWhileStill == null || Instance._fuseWhileStill.Value;
+        internal static bool FixRtdAltars => Instance?._fixRtdAltars == null || Instance._fixRtdAltars.Value;
+        internal static bool FixBuildMenu => Instance?._fixBuildMenu == null || Instance._fixBuildMenu.Value;
+        internal static bool ForgetUnloadedChests => Instance?._forgetUnloadedChests == null || Instance._forgetUnloadedChests.Value;
+        internal static bool FitSendWindow => Instance?._fitSendWindow == null || Instance._fitSendWindow.Value;
         internal static KeyboardShortcut IgnoreTamesKey => Instance?._ignoreTamesKey != null ? Instance._ignoreTamesKey.Value : DefaultIgnoreTamesKey;
+        internal static int ReportMinutes => Instance?._reportMinutes != null ? Instance._reportMinutes.Value : DefaultReportMinutes;
 
         private void Awake()
         {
@@ -208,6 +224,20 @@ namespace NhxModFixes
                 )
             );
 
+            _fixRtdAltars = Config.Bind(
+                "Boss altars",
+                "Fix RtD altars",
+                true,
+                new ConfigDescription(
+                    "RtDLegends' altars inside dungeons (the Fenrir King's and the Spider Queen's) stop summoning their boss when " +
+                    "Creature Level & Loot Control rebuilds their dungeon to refill it, until the player who went in logs out and " +
+                    "back in. With this, the rebuilt altar takes over from the old one. Only used when RtDLegends is installed. " +
+                    "The server's setting applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
             // Each player's own key, not synced
             _ignoreTamesKey = Config.Bind(
                 "Tames",
@@ -218,11 +248,72 @@ namespace NhxModFixes
                 "items used from the hotbar, and you can't pet, command, ride or protect tames until you turn it off."
             );
 
+            _fixBuildMenu = Config.Bind(
+                "Build menu",
+                "Fix build menu slowdown",
+                true,
+                new ConfigDescription(
+                    "Every time the build menu shows its pieces (opening it, picking a category, searching), the game adds each " +
+                    "piece's button to a list and never takes it out, so the menu gets slower the longer you play. With this, " +
+                    "a button's old entry is taken out first. The server's setting applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _forgetUnloadedChests = Config.Bind(
+                "Containers",
+                "Forget unloaded chests",
+                true,
+                new ConfigDescription(
+                    "AzuCraftyBoxes lists the chests it can take materials from, but a chest that loads and unloads while you're " +
+                    "not crafting or building (walking past a base) stays on its list for the rest of the session. With this, " +
+                    "unloaded chests are taken off its list. Only used when AzuCraftyBoxes is installed. The server's setting " +
+                    "applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _fitSendWindow = Config.Bind(
+                "Network",
+                "Fit send window to ping",
+                true,
+                new ConfigDescription(
+                    "The game sends world updates in batches of at most 10 KB, counting what the other side hasn't confirmed " +
+                    "yet, so a player with a high ping gets them more slowly when a lot changes (sailing, fights), and items " +
+                    "can take seconds to pick up. With this, each connection's limit fits its ping and Steam's send rate (up " +
+                    "to 64 KB). It applies to what each game sends: the server to each player, each player's game to the " +
+                    "server. The server's setting applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            // Each game's own (the dedicated server's too), not synced
+            _reportMinutes = Config.Bind(
+                "Diagnostics",
+                "Session report interval",
+                DefaultReportMinutes,
+                new ConfigDescription(
+                    "Every this many minutes in a world, writes the frame rate, memory use, how many objects the game holds, " +
+                    "the build menu's and AzuCraftyBoxes' lists and each connection's ping and send backlog to the log, and " +
+                    "logs item pickups that waited a second or more for another player's game. For finding what slows a long " +
+                    "session down. 0 turns it off.",
+                    new AcceptableValueRange<int>(0, 60)
+                )
+            );
+
             Assembly assembly = Assembly.GetExecutingAssembly();
             _harmonyInstance = new Harmony(PluginGuid);
             _harmonyInstance.PatchAll(assembly);
 
             Log.LogInfo($"{PluginName} v{PluginVersion} loaded.");
+        }
+
+        private void Update()
+        {
+            SessionReport.Update();
         }
 
         private void OnDestroy()
