@@ -9,7 +9,8 @@ namespace NhxModFixes.Fixes
     // character doesn't remember the boss. Mods that read a player's own bosses then treat them as if they hadn't beaten
     // it: CLLC's "Fluid" world level, which gives the next biomes level 3 instead of 1.
     // This gives the boss to every player who hit it (the game's own list, the one it registers the kill for) or was
-    // within 100 m when it died.
+    // within 100 m when it died. Only for bosses (m_boss, the boss health bar): other creatures have a defeat key too,
+    // like bats ("KilledBat"), which the game only gives to the killer.
     [HarmonyPatch]
     internal static class SharedBossKills
     {
@@ -34,7 +35,7 @@ namespace NhxModFixes.Fixes
         {
             string key = __instance.m_defeatSetGlobalKey;
             ZDO zdo = __instance.m_nview != null ? __instance.m_nview.GetZDO() : null;
-            if (string.IsNullOrEmpty(key) || zdo == null || !__instance.m_nview.IsOwner())
+            if (!__instance.IsBoss() || string.IsNullOrEmpty(key) || zdo == null || !__instance.m_nview.IsOwner())
             {
                 return;
             }

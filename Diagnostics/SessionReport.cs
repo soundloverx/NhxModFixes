@@ -7,10 +7,12 @@ using UnityEngine.Profiling;
 namespace NhxModFixes.Diagnostics
 {
     // Every "Session report interval" minutes in a world, a log line with what could grow over a long session: the
-    // frame rate, memory, how many objects the game knows (a client keeps every object it was sent, unless it's destroyed,
-    // until it leaves the world, so this grows while exploring) and has loaded, the build menu's and AzuCraftyBoxes' lists,
-    // the item pickups that waited for another game, then a line per connection (ping, send window, backlog). On every
-    // game, the dedicated server included. Called from the plugin's Update.
+    // frame rate, memory and garbage collections, how many objects the game knows (a client keeps every object it was
+    // sent, unless it's destroyed, until it leaves the world, so this grows while exploring) and has loaded, the time
+    // spent signing building pieces on and off their terrain and checking zones before unloading them, the build menu's
+    // and AzuCraftyBoxes' lists, the mist's update time, the item pickups that waited for another game, then a line per
+    // connection (ping, send window, backlog). The timings and counts cover the time since the last report (since
+    // joining, for the first). On every game, the dedicated server included. Called from the plugin's Update.
     internal static class SessionReport
     {
         private const long MB = 1024 * 1024;
@@ -19,6 +21,7 @@ namespace NhxModFixes.Diagnostics
         private static float _worldStart;
         private static float _lastReport;
         private static int _frames;
+        private static int _collections;
         private static bool _failed;
 
         internal static void Update()
@@ -37,7 +40,11 @@ namespace NhxModFixes.Diagnostics
                 _worldStart = now;
                 _lastReport = now;
                 _frames = 0;
+                _collections = GC.CollectionCount(0);
                 PickupWaits.Reset();
+                PieceTerrainSubscriptions.Reset();
+                FasterMist.Reset();
+                ZoneUnloading.Reset();
                 return;
             }
 
@@ -61,20 +68,21 @@ namespace NhxModFixes.Diagnostics
 
         private static void Write(ZNet net, float now)
         {
+            int collections = GC.CollectionCount(0);
             List<string> parts = new List<string>
             {
                 $"{_frames / (now - _lastReport):0} fps",
-                $"memory {GC.GetTotalMemory(false) / MB} MB managed, {Profiler.GetTotalAllocatedMemoryLong() / MB} MB in all",
+                $"memory {GC.GetTotalMemory(false) / MB} MB managed, {Profiler.GetTotalAllocatedMemoryLong() / MB} MB in all, {collections - _collections} garbage collections",
                 $"{ZDOMan.instance?.m_objectsByID.Count ?? 0} objects known, {ZNetScene.instance?.m_instances.Count ?? 0} loaded",
             };
+            _collections = collections;
+            AddIfAny(parts, PieceTerrainSubscriptions.Report());
+            AddIfAny(parts, ZoneUnloading.Report());
             if (!net.IsDedicated())
             {
                 parts.Add(BuildMenuSubscriptions.Report());
-                string chests = CraftyBoxesChests.Report();
-                if (chests != null)
-                {
-                    parts.Add(chests);
-                }
+                AddIfAny(parts, CraftyBoxesChests.Report());
+                AddIfAny(parts, FasterMist.Report());
                 parts.Add(PickupWaits.Report());
             }
 
@@ -83,6 +91,14 @@ namespace NhxModFixes.Diagnostics
             foreach (string line in SendWindow.Report())
             {
                 Plugin.Log.LogInfo(line);
+            }
+        }
+
+        private static void AddIfAny(List<string> parts, string part)
+        {
+            if (part != null)
+            {
+                parts.Add(part);
             }
         }
     }

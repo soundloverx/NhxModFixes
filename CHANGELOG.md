@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.5.0
+- Less garbage to clean up, so fewer short pauses: Unity reuses one object for the collisions it reports to the game, instead of making a new one for each (every character standing on the ground made some 50 a second). Setting "Reuse collision objects" (section "Physics"), on by default
+- Big bases load and unload faster. Each building piece signed up with its zone's terrain when it loaded and signed off when it unloaded, and each time the game copied the zone's whole list: millions of copies for a zone with a few thousand pieces. Setting "Fix base loading slowdown" (section "Bases"), on by default
+- The Mistlands' mist takes less time to work out. For each mist particle, the game checked every mist area and wisp around and asked Unity for their positions again each time. The mist looks the same. Setting "Faster mist" (section "Mist"), on by default
+- Unloading the zones you leave behind while travelling takes less time. Before unloading each one, the game went through every object it had loaded to see whether one still stood there. Setting "Faster zone unloading" (section "Zones"), on by default
+- The session report also shows the garbage collections, and how long loading building pieces, the mist and unloading zones took, to compare each setting on and off
+- Boss kills are only shared for bosses. Bats also carry a kill key ("KilledBat"), so each bat killed was shared with the players around and logged a line
+
 ## v1.4.0
 - The build menu no longer gets slower the longer you play. Every time it showed its pieces (opening it, picking a category, searching), the game added each button to a list again and never took it out. Setting "Fix build menu slowdown" (section "Build menu"), on by default
 - AzuCraftyBoxes forgets chests that have unloaded. A chest that loaded and unloaded while you weren't crafting or building (logging in at a base and leaving through a portal, walking past a base) stayed on its list for the rest of the session, and every craft went through it. Setting "Forget unloaded chests" (section "Containers"), on by default

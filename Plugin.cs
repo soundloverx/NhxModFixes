@@ -4,6 +4,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using Jotunn.Utils;
 using NhxModFixes.Diagnostics;
+using NhxModFixes.Fixes;
 using System.Reflection;
 using UnityEngine;
 
@@ -27,7 +28,7 @@ namespace NhxModFixes
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.4.0";
+        private const string PluginVersion = "1.5.0";
 
         private const int DefaultMaxRtdMonsters = 3;
         private const float DefaultFollowDistance = 3f;
@@ -53,6 +54,10 @@ namespace NhxModFixes
         private ConfigEntry<bool> _fixBuildMenu;
         private ConfigEntry<bool> _forgetUnloadedChests;
         private ConfigEntry<bool> _fitSendWindow;
+        private ConfigEntry<bool> _reuseCollisions;
+        private ConfigEntry<bool> _fixBaseLoading;
+        private ConfigEntry<bool> _fasterMist;
+        private ConfigEntry<bool> _fasterZoneUnloading;
         private ConfigEntry<KeyboardShortcut> _ignoreTamesKey;
         private ConfigEntry<int> _reportMinutes;
         private Harmony _harmonyInstance;
@@ -72,6 +77,10 @@ namespace NhxModFixes
         internal static bool FixBuildMenu => Instance?._fixBuildMenu == null || Instance._fixBuildMenu.Value;
         internal static bool ForgetUnloadedChests => Instance?._forgetUnloadedChests == null || Instance._forgetUnloadedChests.Value;
         internal static bool FitSendWindow => Instance?._fitSendWindow == null || Instance._fitSendWindow.Value;
+        internal static bool ReuseCollisions => Instance?._reuseCollisions == null || Instance._reuseCollisions.Value;
+        internal static bool FixBaseLoading => Instance?._fixBaseLoading == null || Instance._fixBaseLoading.Value;
+        internal static bool FasterMist => Instance?._fasterMist == null || Instance._fasterMist.Value;
+        internal static bool FasterZoneUnloading => Instance?._fasterZoneUnloading == null || Instance._fasterZoneUnloading.Value;
         internal static KeyboardShortcut IgnoreTamesKey => Instance?._ignoreTamesKey != null ? Instance._ignoreTamesKey.Value : DefaultIgnoreTamesKey;
         internal static int ReportMinutes => Instance?._reportMinutes != null ? Instance._reportMinutes.Value : DefaultReportMinutes;
 
@@ -290,15 +299,72 @@ namespace NhxModFixes
                 )
             );
 
+            _reuseCollisions = Config.Bind(
+                "Physics",
+                "Reuse collision objects",
+                true,
+                new ConfigDescription(
+                    "The game has Unity make a new object for each collision it reports to the game, and every character " +
+                    "standing on the ground makes some 50 times a second, so there's a lot of garbage to clean up, which " +
+                    "shows as short pauses. With this, Unity reuses one object. Collisions work the same. The server's setting " +
+                    "applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _fixBaseLoading = Config.Bind(
+                "Bases",
+                "Fix base loading slowdown",
+                true,
+                new ConfigDescription(
+                    "Each building piece signs up with its zone's terrain when it loads and signs off when it unloads, and " +
+                    "each time the game copies the zone's whole list, so a big base takes much longer to load and unload " +
+                    "than a small one (3000 pieces in a zone make millions of copies). With this, each zone keeps its pieces " +
+                    "in a set instead. Changing the terrain still updates the pieces as in the game. The server's setting " +
+                    "applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _fasterMist = Config.Bind(
+                "Mist",
+                "Faster mist",
+                true,
+                new ConfigDescription(
+                    "In the Mistlands, for each mist particle it places, the game checks every mist area and wisp around, " +
+                    "asking Unity for their positions again each time. With this, it reads them once per update and checks " +
+                    "only the areas a particle can be in. The mist looks the same. Only matters while the mists are on. " +
+                    "The server's setting applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _fasterZoneUnloading = Config.Bind(
+                "Zones",
+                "Faster zone unloading",
+                true,
+                new ConfigDescription(
+                    "While you travel, before unloading each zone left behind, the game goes through every object it has " +
+                    "loaded to see whether one still stands in that zone. With this, it only looks closely at the objects " +
+                    "near that zone. The server's setting applies to every player.",
+                    null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
             // Each game's own (the dedicated server's too), not synced
             _reportMinutes = Config.Bind(
                 "Diagnostics",
                 "Session report interval",
                 DefaultReportMinutes,
                 new ConfigDescription(
-                    "Every this many minutes in a world, writes the frame rate, memory use, how many objects the game holds, " +
-                    "the build menu's and AzuCraftyBoxes' lists and each connection's ping and send backlog to the log, and " +
-                    "logs item pickups that waited a second or more for another player's game. For finding what slows a long " +
+                    "Every this many minutes in a world, writes the frame rate, memory use and garbage collections, how many " +
+                    "objects the game holds, the build menu's and AzuCraftyBoxes' lists, how long loading building pieces, " +
+                    "the mist and unloading zones took, and each connection's ping and send backlog to the log, and logs " +
+                    "item pickups that waited a second or more for another player's game. For finding what slows a long " +
                     "session down. 0 turns it off.",
                     new AcceptableValueRange<int>(0, 60)
                 )
@@ -313,6 +379,7 @@ namespace NhxModFixes
 
         private void Update()
         {
+            CollisionReuse.Update();
             SessionReport.Update();
         }
 

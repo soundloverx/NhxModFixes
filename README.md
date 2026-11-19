@@ -66,9 +66,25 @@ AzuCraftyBoxes keeps a list of the chests it can take materials from. A chest th
 
 The game sends world updates in batches of at most 10 KB per round trip, counting what the other side hasn't confirmed yet: the server to each player, and each player's game to the server. When a lot changes, like while sailing into new areas or in a fight, updates pile up, players and creatures first, items last, which is likely why picking up items could take seconds after a long sail. With NhxModFixes, each connection's limit fits its ping and Steam's send rate: about 21 KB at 40 ms of ping, up to 64 KB.
 
+## Collision garbage
+
+Every time two things touch, Unity hands the game an object describing the contact, and the game has it make a new one each time: every character standing on the ground makes some 50 a second, and all of them are garbage a moment later. Cleaning up garbage shows as short pauses. With NhxModFixes, Unity reuses one object instead. Collisions work the same.
+
+## Loading bases
+
+Each building piece signs up with its zone's terrain when it loads, so that digging or raising the ground there checks the pieces again, and signs off when it unloads. Each time, the game copies the zone's whole list, so a zone with a few thousand pieces makes millions of copies when your base loads (coming home, logging in, through a portal) and again when it unloads. With NhxModFixes, each zone keeps its pieces in a set. Changing the terrain still checks the pieces as before.
+
+## Mistlands mist
+
+To place its mist, the game checks, for each particle, every mist area and wisp around, and asks Unity for their positions again each time: a few hundred particles per area, several times a second. With NhxModFixes, the positions are read once each time and each particle is only checked against the areas it can be in. The mist looks the same. It only matters while the mists are on.
+
+## Unloading zones
+
+While you travel, the game unloads the zones you've left behind, but first checks that nothing still stands in each one, by going through every object it has loaded. With NhxModFixes, it only looks closely at the objects near that zone.
+
 ## Session report
 
-Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame rate, memory use, how many objects the game holds, the build menu's and AzuCraftyBoxes' lists, and each connection's ping, send window and backlog. It also logs item pickups that waited a second or more for another player's game. The server writes it too, in its own log.
+Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame rate, memory use and garbage collections, how many objects the game holds, how long loading building pieces, the mist and unloading zones took, the build menu's and AzuCraftyBoxes' lists, and each connection's ping, send window and backlog. It also logs item pickups that waited a second or more for another player's game. The server writes it too, in its own log.
 
 ## Settings
 
@@ -92,6 +108,10 @@ Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame 
 | Build menu | Fix build menu slowdown | true | The fix for the build menu getting slower. |
 | Containers | Forget unloaded chests | true | Unloaded chests are taken off AzuCraftyBoxes' list. |
 | Network | Fit send window to ping | true | Each connection's send limit fits its ping and Steam's send rate, instead of the game's 10 KB. |
+| Physics | Reuse collision objects | true | Unity reuses one object for the collisions it reports, instead of making a new one each time. |
+| Bases | Fix base loading slowdown | true | Each zone keeps its building pieces in a set, so big bases load and unload faster. |
+| Mist | Faster mist | true | The Mistlands' mist reads the mist areas' positions once and checks only the areas a particle can be in. |
+| Zones | Faster zone unloading | true | Before unloading a zone, only the objects near it are looked at closely. |
 | Diagnostics | Session report interval | 5 | Every this many minutes in a world, a session report in the log. 0 turns it off. |
 
 The server's settings apply to every player, and only admins can change them, in game with the Configuration Manager (F1). A change to the server's config file applies after a restart. The exceptions are "Ignore tames key" and "Session report interval": each game has its own, the server's included.

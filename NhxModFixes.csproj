@@ -84,6 +84,11 @@
       <HintPath>..\..\valheim_mod_libraries\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <!-- ParticleSystemForceField, for the demisters' range (not in valheim_mod_libraries) -->
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>$(ValheimManaged)\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
       <HintPath>..\..\valheim_mod_libraries\UnityEngine.PhysicsModule.dll</HintPath>
       <Private>False</Private>
@@ -94,12 +99,15 @@
     <Compile Include="Diagnostics\SessionReport.cs" />
     <Compile Include="Fixes\BuildMenuSubscriptions.cs" />
     <Compile Include="Fixes\ChestUseKey.cs" />
+    <Compile Include="Fixes\CollisionReuse.cs" />
     <Compile Include="Fixes\CraftyBoxesChests.cs" />
     <Compile Include="Fixes\DepositSupport.cs" />
+    <Compile Include="Fixes\FasterMist.cs" />
     <Compile Include="Fixes\FollowDistance.cs" />
     <Compile Include="Fixes\FusionBoxProgress.cs" />
     <Compile Include="Fixes\IgnoreTames.cs" />
     <Compile Include="Fixes\PassThroughFriends.cs" />
+    <Compile Include="Fixes\PieceTerrainSubscriptions.cs" />
     <Compile Include="Fixes\RestedDelay.cs" />
     <Compile Include="Fixes\RtdAltars.cs" />
     <Compile Include="Fixes\RtdSpawnLimit.cs" />
@@ -108,6 +116,7 @@
     <Compile Include="Fixes\ShipImpacts.cs" />
     <Compile Include="Fixes\TeleportGhosts.cs" />
     <Compile Include="Fixes\UnregisteredPrefabs.cs" />
+    <Compile Include="Fixes\ZoneUnloading.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
