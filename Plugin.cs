@@ -28,12 +28,14 @@ namespace NhxModFixes
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.5.0";
+        private const string PluginVersion = "1.5.1";
 
         private const int DefaultMaxRtdMonsters = 3;
         private const float DefaultFollowDistance = 3f;
         private const int DefaultRestedDelay = 5;
         private const int DefaultReportMinutes = 5;
+        private const int DefaultDungeonFog = 100;
+        private const int DefaultDungeonDustAndMist = 100;
         private static readonly KeyboardShortcut DefaultIgnoreTamesKey = new KeyboardShortcut(KeyCode.End);
 
         internal static Plugin Instance { get; private set; }
@@ -59,6 +61,9 @@ namespace NhxModFixes
         private ConfigEntry<bool> _fasterMist;
         private ConfigEntry<bool> _fasterZoneUnloading;
         private ConfigEntry<KeyboardShortcut> _ignoreTamesKey;
+        private ConfigEntry<int> _dungeonFog;
+        private ConfigEntry<int> _dungeonDustAndMist;
+        private ConfigEntry<bool> _steadyTorches;
         private ConfigEntry<int> _reportMinutes;
         private Harmony _harmonyInstance;
 
@@ -82,6 +87,9 @@ namespace NhxModFixes
         internal static bool FasterMist => Instance?._fasterMist == null || Instance._fasterMist.Value;
         internal static bool FasterZoneUnloading => Instance?._fasterZoneUnloading == null || Instance._fasterZoneUnloading.Value;
         internal static KeyboardShortcut IgnoreTamesKey => Instance?._ignoreTamesKey != null ? Instance._ignoreTamesKey.Value : DefaultIgnoreTamesKey;
+        internal static int DungeonFog => Instance?._dungeonFog != null ? Instance._dungeonFog.Value : DefaultDungeonFog;
+        internal static int DungeonDustAndMist => Instance?._dungeonDustAndMist != null ? Instance._dungeonDustAndMist.Value : DefaultDungeonDustAndMist;
+        internal static bool SteadyTorches => Instance?._steadyTorches != null && Instance._steadyTorches.Value;
         internal static int ReportMinutes => Instance?._reportMinutes != null ? Instance._reportMinutes.Value : DefaultReportMinutes;
 
         private void Awake()
@@ -353,6 +361,38 @@ namespace NhxModFixes
                     null,
                     new ConfigurationManagerAttributes { IsAdminOnly = true }
                 )
+            );
+
+            // Each player's own, not synced: how the game looks to them
+            _dungeonFog = Config.Bind(
+                "Dungeons",
+                "Dungeon fog",
+                DefaultDungeonFog,
+                new ConfigDescription(
+                    "How thick the fog is inside dungeons, in percent of the game's, for you only. Inside a dungeon (burial " +
+                    "chambers, sunken crypts, caves, mines, and the dungeons mods add) the game's fog is 10 to 60 times " +
+                    "thicker than outdoors, so you can't see far. 100 is the game's, 0 removes it.",
+                    new AcceptableValueRange<int>(0, 100)
+                )
+            );
+            _dungeonDustAndMist = Config.Bind(
+                "Dungeons",
+                "Dungeon dust and mist",
+                DefaultDungeonDustAndMist,
+                new ConfigDescription(
+                    "How much of the dust and drifting mist around you inside dungeons is kept, in percent, for you only. " +
+                    "The mist is lit by every torch, fire and spell nearby, so it glows and pulses with them. 100 is the " +
+                    "game's, 0 removes them.",
+                    new AcceptableValueRange<int>(0, 100)
+                )
+            );
+            _steadyTorches = Config.Bind(
+                "Lights",
+                "Steady torches",
+                false,
+                "Torches, fires, braziers, lanterns and other lasting lights shine steadily instead of flickering and " +
+                "wobbling, everywhere, for you only. The game's \"Reduce flashing lights\" option (Accessibility) only calms " +
+                "short flashes (lightning, explosions, spell hits) and leaves these flickering."
             );
 
             // Each game's own (the dedicated server's too), not synced

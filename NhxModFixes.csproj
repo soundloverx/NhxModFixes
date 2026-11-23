@@ -102,6 +102,7 @@
     <Compile Include="Fixes\CollisionReuse.cs" />
     <Compile Include="Fixes\CraftyBoxesChests.cs" />
     <Compile Include="Fixes\DepositSupport.cs" />
+    <Compile Include="Fixes\DungeonAtmosphere.cs" />
     <Compile Include="Fixes\FasterMist.cs" />
     <Compile Include="Fixes\FollowDistance.cs" />
     <Compile Include="Fixes\FusionBoxProgress.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Fixes\SendWindow.cs" />
     <Compile Include="Fixes\SharedBossKills.cs" />
     <Compile Include="Fixes\ShipImpacts.cs" />
+    <Compile Include="Fixes\SteadyTorches.cs" />
     <Compile Include="Fixes\TeleportGhosts.cs" />
     <Compile Include="Fixes\UnregisteredPrefabs.cs" />
     <Compile Include="Fixes\ZoneUnloading.cs" />

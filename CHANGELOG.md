@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.5.1
+- Thinner fog inside dungeons, for players who want to see farther. Inside burial chambers, crypts, caves, mines and the dungeons mods add, the game's fog is 10 to 60 times thicker than outdoors. Setting "Dungeon fog" (section "Dungeons"), in percent of the game's, each player's own, 100 by default
+- Less dust and mist inside dungeons. Dust and big puffs of mist drift around you there, lit by every torch, fire and spell nearby, so they glow and pulse. Setting "Dungeon dust and mist" (section "Dungeons"), in percent of the game's, each player's own, 100 by default
+- Torches, fires, braziers, lanterns and other lasting lights can shine steadily instead of flickering and wobbling. The game's "Reduce flashing lights" option only calms short flashes (lightning, explosions, spell hits). Setting "Steady torches" (section "Lights"), each player's own, off by default
+
 ## v1.5.0
 - Less garbage to clean up, so fewer short pauses: Unity reuses one object for the collisions it reports to the game, instead of making a new one for each (every character standing on the ground made some 50 a second). Setting "Reuse collision objects" (section "Physics"), on by default
 - Big bases load and unload faster. Each building piece signed up with its zone's terrain when it loaded and signed off when it unloaded, and each time the game copied the zone's whole list: millions of copies for a zone with a few thousand pieces. Setting "Fix base loading slowdown" (section "Bases"), on by default
