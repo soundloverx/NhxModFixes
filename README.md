@@ -90,6 +90,10 @@ Inside a dungeon (burial chambers, troll caves, sunken crypts, frost caves, the 
 
 Torches, fires, braziers and lanterns flicker and wobble all the time, and the game's "Reduce flashing lights" option (Accessibility) leaves them alone: it only calms short flashes like lightning, explosions and spell hits. With "Steady torches" on, lasting lights shine steadily, everywhere. Each player's own, off by default.
 
+## Fire and shields on tames
+
+Fire and spirit damage set a creature burning, with flames, sparks and a flickering light scaled to its size, and shields (the Staff of Protection's, the ones RtD's fairies and pixies cast) wrap it in a glowing bubble that bursts when it's hit or breaks. A tame flying around your head, like RtD's fairies, can then cover most of the screen with fire or bubbles. With "Disable tamed on fire" on, burning tamed creatures are shown without their flames and light; with "Disable tamed shields" on, shielded tamed creatures are shown without their bubble, its bursts, and a fairy's burst when it casts a shield. Sounds, damage and what the shields absorb stay as they are, and your own shield still shows. Each player's own, off by default. The bursts of a shield on a tame another player's game controls are only hidden if that player also has this version.
+
 ## Session report
 
 Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame rate, memory use and garbage collections, how many objects the game holds, how long loading building pieces, the mist and unloading zones took, the build menu's and AzuCraftyBoxes' lists, and each connection's ping, send window and backlog. It also logs item pickups that waited a second or more for another player's game. The server writes it too, in its own log.
@@ -123,9 +127,11 @@ Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame 
 | Dungeons | Dungeon fog | 100 | How thick the fog is inside dungeons, in percent of the game's. 0 removes it. |
 | Dungeons | Dungeon dust and mist | 100 | How much of the dust and drifting mist inside dungeons is kept, in percent. 0 removes them. |
 | Lights | Steady torches | false | Torches, fires, braziers, lanterns and other lasting lights stop flickering. |
+| Tames | Disable tamed on fire | false | Burning tamed creatures are shown without their flames and light. |
+| Tames | Disable tamed shields | false | Shielded tamed creatures are shown without their shield bubble and its bursts. |
 | Diagnostics | Session report interval | 5 | Every this many minutes in a world, a session report in the log. 0 turns it off. |
 
-The server's settings apply to every player, and only admins can change them, in game with the Configuration Manager (F1). A change to the server's config file applies after a restart. The exceptions are "Ignore tames key", "Dungeon fog", "Dungeon dust and mist", "Steady torches" and "Session report interval": each game has its own, the server's included.
+The server's settings apply to every player, and only admins can change them, in game with the Configuration Manager (F1). A change to the server's config file applies after a restart. The exceptions are "Ignore tames key", "Dungeon fog", "Dungeon dust and mist", "Steady torches", "Disable tamed on fire", "Disable tamed shields" and "Session report interval": each game has its own, the server's included.
 
 ## Installation
 

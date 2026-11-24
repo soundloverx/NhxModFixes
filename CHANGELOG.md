@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.5.2
+- Tamed creatures that catch fire, or burn from spirit damage, can be shown without their flames and light, so a burning pet flying around your head (RtD's fairies) no longer covers the screen with fire. Their burning sound and damage stay. Setting "Disable tamed on fire" (section "Tames"), each player's own, off by default
+- Shielded tamed creatures can be shown without their shield bubble (the Staff of Protection's, the ones RtD's fairies and pixies cast, other mods' shields), the bursts when it's hit or breaks, and a fairy's burst when it casts one. The shields still protect them, and your own shield still shows. The bursts of a tame another player's game controls are only hidden if that player also has this version. Setting "Disable tamed shields" (section "Tames"), each player's own, off by default
+
 ## v1.5.1
 - Thinner fog inside dungeons, for players who want to see farther. Inside burial chambers, crypts, caves, mines and the dungeons mods add, the game's fog is 10 to 60 times thicker than outdoors. Setting "Dungeon fog" (section "Dungeons"), in percent of the game's, each player's own, 100 by default
 - Less dust and mist inside dungeons. Dust and big puffs of mist drift around you there, lit by every torch, fire and spell nearby, so they glow and pulse. Setting "Dungeon dust and mist" (section "Dungeons"), in percent of the game's, each player's own, 100 by default

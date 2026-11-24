@@ -28,7 +28,7 @@ namespace NhxModFixes
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.5.1";
+        private const string PluginVersion = "1.5.2";
 
         private const int DefaultMaxRtdMonsters = 3;
         private const float DefaultFollowDistance = 3f;
@@ -64,6 +64,8 @@ namespace NhxModFixes
         private ConfigEntry<int> _dungeonFog;
         private ConfigEntry<int> _dungeonDustAndMist;
         private ConfigEntry<bool> _steadyTorches;
+        private ConfigEntry<bool> _disableTamedOnFire;
+        private ConfigEntry<bool> _disableTamedShields;
         private ConfigEntry<int> _reportMinutes;
         private Harmony _harmonyInstance;
 
@@ -90,6 +92,8 @@ namespace NhxModFixes
         internal static int DungeonFog => Instance?._dungeonFog != null ? Instance._dungeonFog.Value : DefaultDungeonFog;
         internal static int DungeonDustAndMist => Instance?._dungeonDustAndMist != null ? Instance._dungeonDustAndMist.Value : DefaultDungeonDustAndMist;
         internal static bool SteadyTorches => Instance?._steadyTorches != null && Instance._steadyTorches.Value;
+        internal static bool DisableTamedOnFire => Instance?._disableTamedOnFire != null && Instance._disableTamedOnFire.Value;
+        internal static bool DisableTamedShields => Instance?._disableTamedShields != null && Instance._disableTamedShields.Value;
         internal static int ReportMinutes => Instance?._reportMinutes != null ? Instance._reportMinutes.Value : DefaultReportMinutes;
 
         private void Awake()
@@ -394,6 +398,23 @@ namespace NhxModFixes
                 "wobbling, everywhere, for you only. The game's \"Reduce flashing lights\" option (Accessibility) only calms " +
                 "short flashes (lightning, explosions, spell hits) and leaves these flickering."
             );
+            _disableTamedOnFire = Config.Bind(
+                "Tames",
+                "Disable tamed on fire",
+                false,
+                "Hides the flames and the light of tamed creatures that are burning, from fire or spirit damage, for you " +
+                "only. A burning tame flying around your head (RtD's fairies) can cover most of the screen with fire. " +
+                "Their burning sound and damage stay."
+            );
+            _disableTamedShields = Config.Bind(
+                "Tames",
+                "Disable tamed shields",
+                false,
+                "Hides the shield bubbles on tamed creatures (the Staff of Protection's, the ones RtD's fairies and pixies " +
+                "cast, and other mods' shields), with the bursts when a shield is hit or breaks and a fairy's burst when it " +
+                "casts one, for you only. The shields still protect them. The bursts of a tame another player's game " +
+                "controls are only hidden if that player has this version of NhxModFixes."
+            );
 
             // Each game's own (the dedicated server's too), not synced
             _reportMinutes = Config.Bind(
@@ -420,6 +441,7 @@ namespace NhxModFixes
         private void Update()
         {
             CollisionReuse.Update();
+            TameEffects.Update();
             SessionReport.Update();
         }
 
