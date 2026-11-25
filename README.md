@@ -18,10 +18,6 @@ When a boss dies, the game records it in only one player's character: the one wh
 
 Tamed creatures and other players push you around when they walk into you, and at a crafting station, being pushed a step away closes its window. With NhxModFixes, players walk through tamed creatures (pets, mounts, summons) and through each other. Attacks still hit them as before, but you can no longer stand on a lox's back or on another player.
 
-## Players left in portals
-
-Because of a bug in the game's server, a player who goes through a portal can stay visible to the others, standing in it and doing what they do on the other side, with monsters attacking them for nothing, until they come back or the others move away. NhxModFixes fixes the server, so the others' games remove them once they've left.
-
 ## Sockets opening at chests
 
 Opening a chest with the interact key while still holding it could open the sockets of an item in the middle of the screen instead (Jewelcrafting, with AzuEPI's equipment slots there), and leave the mouse stuck until the inventory was closed with the keyboard. With NhxModFixes, the key press that opens a chest doesn't open sockets, and holding the key stacks your items into the chest as usual. Once the key is released, pressing it over an item with sockets opens them as before.
@@ -53,10 +49,6 @@ A sailing ship that runs into a creature damages it and itself, as if it hit a r
 ## RtD boss altars
 
 RtDLegends' Fenrir King and Spider Queen altars stand inside their dungeons. Creature Level & Loot Control rebuilds a dungeon to refill it when someone goes in after its respawn time, and the rebuilt altar couldn't take over from the old one: offering the tokens did nothing on that player's game until they logged out and back in, or went far away and came back. With NhxModFixes, the rebuilt altar takes over, and summons the boss as usual.
-
-## Build menu slowdown
-
-Every time the build menu shows its pieces (opening it, picking a category, searching), the game adds each button to a list again and never takes it out, so the menu gets a little slower each time, for the rest of the session. With NhxModFixes, a button's old entry is taken out first.
 
 ## AzuCraftyBoxes chests
 
@@ -96,7 +88,7 @@ Fire and spirit damage set a creature burning, with flames, sparks and a flicker
 
 ## Session report
 
-Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame rate, memory use and garbage collections, how many objects the game holds, how long loading building pieces, the mist and unloading zones took, the build menu's and AzuCraftyBoxes' lists, and each connection's ping, send window and backlog. It also logs item pickups that waited a second or more for another player's game. The server writes it too, in its own log.
+Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame rate, memory use and garbage collections, how many objects the game holds, how long loading building pieces, the mist and unloading zones took, AzuCraftyBoxes' list, and each connection's ping, send window and backlog. It also logs item pickups that waited a second or more for another player's game. The server writes it too, in its own log.
 
 ## Settings
 
@@ -107,7 +99,6 @@ Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame 
 | RtD spawns | Max RtD monsters nearby | 3 | How many RtD monsters, all kinds together, can be around before more stop spawning. 0 removes the limit. |
 | Collisions | Pass through tames | true | Players walk through tamed creatures. |
 | Collisions | Pass through players | true | Players walk through each other. |
-| Teleports | Fix players left in portals | true | The fix for players left in portals. Only the server uses it. |
 | Containers | Fix sockets opening at chests | true | The fix for sockets opening at chests. |
 | Tames | Follow distance | 3 | How far, in meters, a following tame stays from its player, body to body. 0 for the game's behavior. |
 | Tames | Step back when approached | true | A following tame steps back when its player walks up to it. |
@@ -117,7 +108,6 @@ Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame 
 | Fusion boxes | Fuse all carried boxes | true | Every carried fusion box gets its progress, instead of one at random. |
 | Fusion boxes | Fuse while standing still | true | Fusion boxes progress every minute, even when the player doesn't move. |
 | Boss altars | Fix RtD altars | true | RtDLegends' dungeon altars (Fenrir King, Spider Queen) still summon their boss after their dungeon is rebuilt. |
-| Build menu | Fix build menu slowdown | true | The fix for the build menu getting slower. |
 | Containers | Forget unloaded chests | true | Unloaded chests are taken off AzuCraftyBoxes' list. |
 | Network | Fit send window to ping | true | Each connection's send limit fits its ping and Steam's send rate, instead of the game's 10 KB. |
 | Physics | Reuse collision objects | true | Unity reuses one object for the collisions it reports, instead of making a new one each time. |

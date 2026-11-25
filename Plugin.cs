@@ -28,7 +28,7 @@ namespace NhxModFixes
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.5.2";
+        private const string PluginVersion = "1.6.0";
 
         private const int DefaultMaxRtdMonsters = 3;
         private const float DefaultFollowDistance = 3f;
@@ -44,7 +44,6 @@ namespace NhxModFixes
         private ConfigEntry<int> _maxRtdMonsters;
         private ConfigEntry<bool> _passThroughTames;
         private ConfigEntry<bool> _passThroughPlayers;
-        private ConfigEntry<bool> _fixTeleportGhosts;
         private ConfigEntry<bool> _fixChestSockets;
         private ConfigEntry<float> _followDistance;
         private ConfigEntry<bool> _stepBackFromPlayers;
@@ -53,7 +52,6 @@ namespace NhxModFixes
         private ConfigEntry<bool> _fuseAllBoxes;
         private ConfigEntry<bool> _fuseWhileStill;
         private ConfigEntry<bool> _fixRtdAltars;
-        private ConfigEntry<bool> _fixBuildMenu;
         private ConfigEntry<bool> _forgetUnloadedChests;
         private ConfigEntry<bool> _fitSendWindow;
         private ConfigEntry<bool> _reuseCollisions;
@@ -72,7 +70,6 @@ namespace NhxModFixes
         internal static int MaxRtdMonsters => Instance?._maxRtdMonsters != null ? Instance._maxRtdMonsters.Value : DefaultMaxRtdMonsters;
         internal static bool PassThroughTames => Instance?._passThroughTames == null || Instance._passThroughTames.Value;
         internal static bool PassThroughPlayers => Instance?._passThroughPlayers == null || Instance._passThroughPlayers.Value;
-        internal static bool FixTeleportGhosts => Instance?._fixTeleportGhosts == null || Instance._fixTeleportGhosts.Value;
         internal static bool FixChestSockets => Instance?._fixChestSockets == null || Instance._fixChestSockets.Value;
         internal static float FollowDistance => Instance?._followDistance != null ? Instance._followDistance.Value : DefaultFollowDistance;
         internal static bool StepBackFromPlayers => Instance?._stepBackFromPlayers == null || Instance._stepBackFromPlayers.Value;
@@ -81,7 +78,6 @@ namespace NhxModFixes
         internal static bool FuseAllBoxes => Instance?._fuseAllBoxes == null || Instance._fuseAllBoxes.Value;
         internal static bool FuseWhileStill => Instance?._fuseWhileStill == null || Instance._fuseWhileStill.Value;
         internal static bool FixRtdAltars => Instance?._fixRtdAltars == null || Instance._fixRtdAltars.Value;
-        internal static bool FixBuildMenu => Instance?._fixBuildMenu == null || Instance._fixBuildMenu.Value;
         internal static bool ForgetUnloadedChests => Instance?._forgetUnloadedChests == null || Instance._forgetUnloadedChests.Value;
         internal static bool FitSendWindow => Instance?._fitSendWindow == null || Instance._fitSendWindow.Value;
         internal static bool ReuseCollisions => Instance?._reuseCollisions == null || Instance._reuseCollisions.Value;
@@ -133,20 +129,6 @@ namespace NhxModFixes
                 true,
                 new ConfigDescription(
                     "Players walk through each other instead of bumping into each other. The server's setting applies to every player.",
-                    null,
-                    new ConfigurationManagerAttributes { IsAdminOnly = true }
-                )
-            );
-
-            // Only the server uses it; admin only so that admins can change it in game too
-            _fixTeleportGhosts = Config.Bind(
-                "Teleports",
-                "Fix players left in portals",
-                true,
-                new ConfigDescription(
-                    "Because of a bug in the game's server, a player who teleports stays visible to the others where they left " +
-                    "(in the portal), until they come back or the others move away. This makes the server tell the others' games " +
-                    "to remove them. Only the server's setting matters.",
                     null,
                     new ConfigurationManagerAttributes { IsAdminOnly = true }
                 )
@@ -267,19 +249,6 @@ namespace NhxModFixes
                 "Turns ignoring tamed creatures on or off, for you only (off when the game starts). While on, you aim through tames " +
                 "at what's behind them, so a pet hovering over your head no longer takes the interact key, the hover text or " +
                 "items used from the hotbar, and you can't pet, command, ride or protect tames until you turn it off."
-            );
-
-            _fixBuildMenu = Config.Bind(
-                "Build menu",
-                "Fix build menu slowdown",
-                true,
-                new ConfigDescription(
-                    "Every time the build menu shows its pieces (opening it, picking a category, searching), the game adds each " +
-                    "piece's button to a list and never takes it out, so the menu gets slower the longer you play. With this, " +
-                    "a button's old entry is taken out first. The server's setting applies to every player.",
-                    null,
-                    new ConfigurationManagerAttributes { IsAdminOnly = true }
-                )
             );
 
             _forgetUnloadedChests = Config.Bind(

@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.6.0
+- Works with the game's 1.0.30 update. v1.5.2 failed to load there (the game removed a method its build menu fix patched), so most of its fixes were off
+- The build menu and portal fixes are gone: since 1.0.30, the game fixes both bugs itself. Settings "Fix build menu slowdown" (section "Build menu") and "Fix players left in portals" (section "Teleports") removed
+- The session report no longer counts the build menu's list
+
 ## v1.5.2
 - Tamed creatures that catch fire, or burn from spirit damage, can be shown without their flames and light, so a burning pet flying around your head (RtD's fairies) no longer covers the screen with fire. Their burning sound and damage stay. Setting "Disable tamed on fire" (section "Tames"), each player's own, off by default
 - Shielded tamed creatures can be shown without their shield bubble (the Staff of Protection's, the ones RtD's fairies and pixies cast, other mods' shields), the bursts when it's hit or breaks, and a fairy's burst when it casts one. The shields still protect them, and your own shield still shows. The bursts of a tame another player's game controls are only hidden if that player also has this version. Setting "Disable tamed shields" (section "Tames"), each player's own, off by default

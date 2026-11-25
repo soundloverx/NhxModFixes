@@ -9,8 +9,8 @@ namespace NhxModFixes.Diagnostics
     // Every "Session report interval" minutes in a world, a log line with what could grow over a long session: the
     // frame rate, memory and garbage collections, how many objects the game knows (a client keeps every object it was
     // sent, unless it's destroyed, until it leaves the world, so this grows while exploring) and has loaded, the time
-    // spent signing building pieces on and off their terrain and checking zones before unloading them, the build menu's
-    // and AzuCraftyBoxes' lists, the mist's update time, the item pickups that waited for another game, then a line per
+    // spent signing building pieces on and off their terrain and checking zones before unloading them, AzuCraftyBoxes'
+    // lists, the mist's update time, the item pickups that waited for another game, then a line per
     // connection (ping, send window, backlog). The timings and counts cover the time since the last report (since
     // joining, for the first). On every game, the dedicated server included. Called from the plugin's Update.
     internal static class SessionReport
@@ -80,7 +80,6 @@ namespace NhxModFixes.Diagnostics
             AddIfAny(parts, ZoneUnloading.Report());
             if (!net.IsDedicated())
             {
-                parts.Add(BuildMenuSubscriptions.Report());
                 AddIfAny(parts, CraftyBoxesChests.Report());
                 AddIfAny(parts, FasterMist.Report());
                 parts.Add(PickupWaits.Report());

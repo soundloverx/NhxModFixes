@@ -97,7 +97,6 @@
   <ItemGroup>
     <Compile Include="Diagnostics\PickupWaits.cs" />
     <Compile Include="Diagnostics\SessionReport.cs" />
-    <Compile Include="Fixes\BuildMenuSubscriptions.cs" />
     <Compile Include="Fixes\ChestUseKey.cs" />
     <Compile Include="Fixes\CollisionReuse.cs" />
     <Compile Include="Fixes\CraftyBoxesChests.cs" />
@@ -117,7 +116,6 @@
     <Compile Include="Fixes\ShipImpacts.cs" />
     <Compile Include="Fixes\SteadyTorches.cs" />
     <Compile Include="Fixes\TameEffects.cs" />
-    <Compile Include="Fixes\TeleportGhosts.cs" />
     <Compile Include="Fixes\UnregisteredPrefabs.cs" />
     <Compile Include="Fixes\ZoneUnloading.cs" />
     <Compile Include="Plugin.cs" />
