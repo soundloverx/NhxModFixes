@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Diagnostics\PickupWaits.cs" />
     <Compile Include="Diagnostics\SessionReport.cs" />
+    <Compile Include="Fixes\AreaRepair.cs" />
     <Compile Include="Fixes\ChestUseKey.cs" />
     <Compile Include="Fixes\CollisionReuse.cs" />
     <Compile Include="Fixes\CraftyBoxesChests.cs" />

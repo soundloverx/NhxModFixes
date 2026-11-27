@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.6.1
+- Repairing with the hammer also repairs every damaged building piece within a configurable range of you (provided its repair conditions are met)
+
 ## v1.6.0
 - Works with the game's 1.0.30 update. v1.5.2 failed to load there (the game removed a method its build menu fix patched), so most of its fixes were off
 - The build menu and portal fixes are gone: since 1.0.30, the game fixes both bugs itself. Settings "Fix build menu slowdown" (section "Build menu") and "Fix players left in portals" (section "Teleports") removed

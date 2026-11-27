@@ -86,6 +86,10 @@ Torches, fires, braziers and lanterns flicker and wobble all the time, and the g
 
 Fire and spirit damage set a creature burning, with flames, sparks and a flickering light scaled to its size, and shields (the Staff of Protection's, the ones RtD's fairies and pixies cast) wrap it in a glowing bubble that bursts when it's hit or breaks. A tame flying around your head, like RtD's fairies, can then cover most of the screen with fire or bubbles. With "Disable tamed on fire" on, burning tamed creatures are shown without their flames and light; with "Disable tamed shields" on, shielded tamed creatures are shown without their bubble, its bursts, and a fairy's burst when it casts a shield. Sounds, damage and what the shields absorb stay as they are, and your own shield still shows. Each player's own, off by default. The bursts of a shield on a tame another player's game controls are only hidden if that player also has this version.
 
+## Repairing around you
+
+The hammer's repair tool repairs one building piece per swing. With NhxModFixes, a swing also repairs every damaged building piece within 10 m of you, for the same stamina, as long as its crafting station is in range and no ward keeps you out, as when repairing it by hand. Clicking a piece that isn't damaged repairs the ones around it. A "Repair radius" of 0 brings back the game's one piece at a time.
+
 ## Session report
 
 Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame rate, memory use and garbage collections, how many objects the game holds, how long loading building pieces, the mist and unloading zones took, AzuCraftyBoxes' list, and each connection's ping, send window and backlog. It also logs item pickups that waited a second or more for another player's game. The server writes it too, in its own log.
@@ -114,6 +118,7 @@ Every 5 minutes in a world, NhxModFixes writes a line to the log with the frame 
 | Bases | Fix base loading slowdown | true | Each zone keeps its building pieces in a set, so big bases load and unload faster. |
 | Mist | Faster mist | true | The Mistlands' mist reads the mist areas' positions once and checks only the areas a particle can be in. |
 | Zones | Faster zone unloading | true | Before unloading a zone, only the objects near it are looked at closely. |
+| Repair | Repair radius | 10 | A hammer repair also repairs every damaged building piece within this many meters of you. 0 for the game's one piece at a time. |
 | Dungeons | Dungeon fog | 100 | How thick the fog is inside dungeons, in percent of the game's. 0 removes it. |
 | Dungeons | Dungeon dust and mist | 100 | How much of the dust and drifting mist inside dungeons is kept, in percent. 0 removes them. |
 | Lights | Steady torches | false | Torches, fires, braziers, lanterns and other lasting lights stop flickering. |

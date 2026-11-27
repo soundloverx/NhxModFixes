@@ -34,6 +34,7 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 CLAUDE.md
+Notes/
 
 # Mod packaging output (if you zip builds for Thunderstore, etc.)
 *.zip

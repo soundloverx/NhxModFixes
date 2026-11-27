@@ -21,18 +21,19 @@ namespace NhxModFixes
     // the collisions, with the server's settings. A prefab is only found again by the games that have the fix, a
     // shared boss kill is sent from one player's game to the others', an ore deposit collapses (or not) and a tame keeps
     // its distance and a ship spares it as the game controlling them decides, and each player's game decides when
-    // they're rested, how fast the fusion boxes they carry fuse and whether the RtD altars in a dungeon it rebuilds still
-    // summon their boss
+    // they're rested, how fast the fusion boxes they carry fuse, whether the RtD altars in a dungeon it rebuilds still
+    // summon their boss and how far its player's repairs reach
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     public class Plugin : BaseUnityPlugin
     {
         internal const string PluginGuid = "NhxModFixes";
         private const string PluginName = "NhxModFixes";
-        private const string PluginVersion = "1.6.0";
+        private const string PluginVersion = "1.6.1";
 
         private const int DefaultMaxRtdMonsters = 3;
         private const float DefaultFollowDistance = 3f;
         private const int DefaultRestedDelay = 5;
+        private const float DefaultRepairRadius = 20f;
         private const int DefaultReportMinutes = 5;
         private const int DefaultDungeonFog = 100;
         private const int DefaultDungeonDustAndMist = 100;
@@ -58,6 +59,7 @@ namespace NhxModFixes
         private ConfigEntry<bool> _fixBaseLoading;
         private ConfigEntry<bool> _fasterMist;
         private ConfigEntry<bool> _fasterZoneUnloading;
+        private ConfigEntry<float> _repairRadius;
         private ConfigEntry<KeyboardShortcut> _ignoreTamesKey;
         private ConfigEntry<int> _dungeonFog;
         private ConfigEntry<int> _dungeonDustAndMist;
@@ -84,6 +86,7 @@ namespace NhxModFixes
         internal static bool FixBaseLoading => Instance?._fixBaseLoading == null || Instance._fixBaseLoading.Value;
         internal static bool FasterMist => Instance?._fasterMist == null || Instance._fasterMist.Value;
         internal static bool FasterZoneUnloading => Instance?._fasterZoneUnloading == null || Instance._fasterZoneUnloading.Value;
+        internal static float RepairRadius => Instance?._repairRadius != null ? Instance._repairRadius.Value : DefaultRepairRadius;
         internal static KeyboardShortcut IgnoreTamesKey => Instance?._ignoreTamesKey != null ? Instance._ignoreTamesKey.Value : DefaultIgnoreTamesKey;
         internal static int DungeonFog => Instance?._dungeonFog != null ? Instance._dungeonFog.Value : DefaultDungeonFog;
         internal static int DungeonDustAndMist => Instance?._dungeonDustAndMist != null ? Instance._dungeonDustAndMist.Value : DefaultDungeonDustAndMist;
@@ -332,6 +335,20 @@ namespace NhxModFixes
                     "loaded to see whether one still stands in that zone. With this, it only looks closely at the objects " +
                     "near that zone. The server's setting applies to every player.",
                     null,
+                    new ConfigurationManagerAttributes { IsAdminOnly = true }
+                )
+            );
+
+            _repairRadius = Config.Bind(
+                "Repair",
+                "Repair radius",
+                DefaultRepairRadius,
+                new ConfigDescription(
+                    "Repairing with the hammer also repairs every damaged building piece within this many meters of you, " +
+                    "for one swing's stamina, as long as its crafting station is in range and no ward keeps you out. " +
+                    "Clicking a piece that isn't damaged repairs the ones around it. 0 repairs only the piece you aim at, " +
+                    "as in the game. The server's setting applies to every player.",
+                    new AcceptableValueRange<float>(0f, 30f),
                     new ConfigurationManagerAttributes { IsAdminOnly = true }
                 )
             );
